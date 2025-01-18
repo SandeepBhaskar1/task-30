@@ -37,7 +37,7 @@ function Form() {
     e.preventDefault();
     try {
       const response = await axios.post(
-        `${import.meta.env.VITE_BACKEND_URL}/submit`, // Use the backend URL from .env
+        `${import.meta.env.VITE_BACKEND_URL}/submit`, 
         formData,
         {
           headers: { "Content-Type": "application/json" },
