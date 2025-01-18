@@ -7,7 +7,13 @@ const app = express();
 const port = 1164;
 require('dotenv').config();
 
-app.use(cors());
+const corsOptions = {
+    origin: 'https://task-30-wjdc.vercel.app',
+    methods: ['GET', 'POST'],
+    allowedHeaders: ['Content-Type'],
+  };
+  
+  app.use(cors(corsOptions));
 app.use(bodyParser.json());
 
 const mongoURI = process.env.MONGO_URI;
