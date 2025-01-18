@@ -4,100 +4,128 @@ const mongoose = require('mongoose');
 require('dotenv').config();
 
 const app = express();
-const port = 1164;
+const port = process.env.PORT || 1164;
 
-// CORS setup
 const corsOptions = {
-  origin: 'https://task-30-wjdc.vercel.app',
-  methods: ['GET', 'POST'],
-  allowedHeaders: ['Content-Type'],
+    origin: ['https://task-30-wjdc.vercel.app', 'http://localhost:5173'],
+    methods: ['GET', 'POST', 'OPTIONS'],
+    allowedHeaders: ['Content-Type'],
+    credentials: true,
+    optionsSuccessStatus: 200
 };
 
+app.options('*', cors(corsOptions)); 
 app.use(cors(corsOptions));
 
-// Use built-in express.json() for body parsing
 app.use(express.json());
 
-// MongoDB connection
 const mongoURI = process.env.MONGO_URI;
 
-mongoose.connect(mongoURI, { useNewUrlParser: true, useUnifiedTopology: true })
-  .then(() => console.log("Connected to MongoDB"))
-  .catch((err) => console.error("Error connecting to MongoDb:", err));
+mongoose.connect(mongoURI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+})
+.then(() => console.log("Connected to MongoDB"))
+.catch((err) => console.error("Error connecting to MongoDB:", err));
 
-// Define schema and model for form data
 const formSchema = new mongoose.Schema({
-  fullName: String,
-  dateOfBirth: String,
-  gender: String,
-  phoneNo: String,
-  emailId: String,
-  fullAddress: String,
-  emergencyContact: {
-    name: String,
-    relationship: String,
-    emailId: String,
+    fullName: String,
+    dateOfBirth: String,
+    gender: String,
     phoneNo: String,
-  },
-});
+    emailId: String,
+    fullAddress: String,
+    emergencyContact: {
+        name: String,
+        relationship: String,
+        emailId: String,
+        phoneNo: String,
+    },
+}, { timestamps: true });
 
 const FormData = mongoose.model("FormData", formSchema);
 
-// Route to get all form data
+app.get('/health', (req, res) => {
+    res.status(200).json({ status: 'ok', message: 'Server is running' });
+});
+
 app.get('/get', async (req, res) => {
-  try {
-    const allData = await FormData.find();
-    res.json(allData);
-  } catch (error) {
-    res.status(500).json({ message: "Error fetching data." });
-  }
+    try {
+        const allData = await FormData.find();
+        res.json(allData);
+    } catch (error) {
+        console.error("Error fetching data:", error);
+        res.status(500).json({ 
+            message: "Error fetching data.",
+            error: process.env.NODE_ENV === 'development' ? error.message : undefined
+        });
+    }
 });
 
-// Route to handle form submission
 app.post("/submit", async (req, res) => {
-  try {
-    const { fullName, dateOfBirth, gender, phoneNo, emailId, fullAddress, emergencyContact } = req.body;
+    try {
+        const { 
+            fullName, 
+            dateOfBirth, 
+            gender, 
+            phoneNo, 
+            emailId, 
+            fullAddress, 
+            emergencyContact 
+        } = req.body;
 
-    // Create new form data object
-    const newFormData = new FormData({
-      fullName,
-      dateOfBirth,
-      gender,
-      phoneNo,
-      emailId,
-      fullAddress,
-      emergencyContact,
-    });
+        if (!fullName || !dateOfBirth || !gender || !phoneNo || !emailId || !fullAddress) {
+            return res.status(400).json({ message: "All fields are required." });
+        }
 
-    // Save the data to the database
-    const savedData = await newFormData.save();
+        const newFormData = new FormData({
+            fullName,
+            dateOfBirth,
+            gender,
+            phoneNo,
+            emailId,
+            fullAddress,
+            emergencyContact,
+        });
 
-    // Prepare response message
-    const responseMessage = {
-      message: "Form Submitted Successfully! Here are the details you provided:",
-      data: {
-        "Full Name": savedData.fullName,
-        "Date of Birth": savedData.dateOfBirth,
-        "Gender": savedData.gender,
-        "Phone No.": savedData.phoneNo,
-        "Email ID": savedData.emailId,
-        "Full Address": savedData.fullAddress,
-        "Emergency Contact": {
-          "Name": savedData.emergencyContact.name,
-          "Relationship": savedData.emergencyContact.relationship,
-          "Email ID": savedData.emergencyContact.emailId,
-          "Phone No.": savedData.emergencyContact.phoneNo,
-        },
-      },
-    };
+        const savedData = await newFormData.save();
 
-    res.json(responseMessage);
-  } catch (error) {
-    res.status(500).json({ message: "An error occurred while submitting the form." });
-  }
+        const responseMessage = {
+            message: "Form Submitted Successfully! Here are the details you provided:",
+            data: {
+                "Full Name": savedData.fullName,
+                "Date of Birth": savedData.dateOfBirth,
+                "Gender": savedData.gender,
+                "Phone No.": savedData.phoneNo,
+                "Email ID": savedData.emailId,
+                "Full Address": savedData.fullAddress,
+                "Emergency Contact": {
+                    "Name": savedData.emergencyContact.name,
+                    "Relationship": savedData.emergencyContact.relationship,
+                    "Email ID": savedData.emergencyContact.emailId,
+                    "Phone No.": savedData.emergencyContact.phoneNo,
+                },
+            },
+        };
+
+        res.json(responseMessage);
+    } catch (error) {
+        console.error("Form submission error:", error);
+        res.status(500).json({ 
+            message: "An error occurred while submitting the form.",
+            error: process.env.NODE_ENV === 'development' ? error.message : undefined
+        });
+    }
 });
 
-// Start server
+app.use((err, req, res, next) => {
+    console.error(err.stack);
+    res.status(500).json({ 
+        message: 'Something broke!',
+        error: process.env.NODE_ENV === 'development' ? err.message : undefined
+    });
+});
+
 app.listen(port, () => {
-  console.log(`Server is listening on 'http://localhost:${port}'`);
+    console.log(`Server is running on http://localhost:${port}`);
 });

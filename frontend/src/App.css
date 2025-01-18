@@ -90,11 +90,20 @@ button:hover {
   background-color: #2980b9;
 }
 
+button:disabled {
+  background-color: #95a5a6;
+  cursor: not-allowed;
+}
+
 /* Error Message */
-.error {
-  color: red;
-  font-size: 12px;
-  margin-bottom: 10px;
+.error-message {
+  color: #e74c3c;
+  background-color: #fdeaea;
+  padding: 10px;
+  border-radius: 4px;
+  margin-bottom: 20px;
+  font-size: 14px;
+  text-align: center;
 }
 
 /* Responsive Design */
@@ -153,35 +162,41 @@ button:hover {
   margin-bottom: 30px;
 }
 
-.response-container pre {
+.response-container .response-data {
   background-color: #ecf0f1;
   color: #2c3e50;
   padding: 20px;
   border-radius: 5px;
   font-size: 16px;
-  overflow-x: auto;
-  white-space: pre-wrap;
-  word-wrap: break-word;
+  text-align: left;
 }
 
-/* Button */
-.response-container button {
-  background-color: #3498db;
-  color: #fff;
-  padding: 12px 20px;
-  border: none;
-  border-radius: 5px;
-  font-size: 16px;
-  cursor: pointer;
-  transition: background-color 0.3s;
-  width: 100%;
-  max-width: 200px;
-  margin-top: 20px;
-  margin: 0 auto;
+.response-data .data-item {
+  margin-bottom: 15px;
 }
 
-.response-container button:hover {
-  background-color: #2980b9;
+.response-data .data-item strong {
+  color: #34495e;
+  display: inline-block;
+  width: 200px;
+}
+
+.response-data .nested-data {
+  margin-left: 20px;
+  margin-top: 10px;
+}
+
+.response-data .nested-data div {
+  margin-bottom: 5px;
+}
+
+/* Error State */
+.response-container.error {
+  text-align: center;
+}
+
+.response-container.error h1 {
+  color: #e74c3c;
 }
 
 /* Responsive Design for Response Page */
@@ -190,8 +205,12 @@ button:hover {
     padding: 25px;
   }
 
-  .response-container pre {
+  .response-data {
     font-size: 14px;
+  }
+
+  .response-data .data-item strong {
+    width: 150px;
   }
 
   .response-container button {
