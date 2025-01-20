@@ -8,10 +8,8 @@ const port = process.env.PORT || 5000; // Default to port 5000 if not provided
 
 const corsOptions = {
     origin: [
-        'https://task-30-wjdc.vercel.app',    // Add your actual frontend URL
-        'https://task-30-seven.vercel.app',
-        'http://localhost:3000',
-        'http://localhost:5173'
+        'https://task-30-4rxz.vercel.app',    // Add your actual frontend URL
+        'http://localhost:5173',
     ],
     methods: ['GET', 'POST', 'OPTIONS'],
     allowedHeaders: ['Content-Type'],
