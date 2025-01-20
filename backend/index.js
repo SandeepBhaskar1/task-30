@@ -9,7 +9,7 @@ const port = process.env.PORT || 5000; // Default to port 5000 if not provided
 // CORS Configuration
 const corsOptions = {
     origin: [
-        'https://task-30-4rxz.vercel.app',  // Make sure this matches your actual frontend URL
+        'https://task-30-4rxz.vercel.app/submit',  // Make sure this matches your actual frontend URL
         'http://localhost:5173',  // For local development
     ],
     methods: ['GET', 'POST', 'OPTIONS'],
@@ -69,7 +69,7 @@ app.get('/get', async (req, res) => {
 });
 
 // Route to handle form submission (POST request)
-app.post("/submit", async (req, res) => {
+app.post("submit", async (req, res) => {
     try {
         const { fullName, dateOfBirth, gender, phoneNo, emailId, fullAddress, emergencyContact } = req.body;
 
