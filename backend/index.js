@@ -6,6 +6,7 @@ require('dotenv').config(); // For environment variables
 const app = express();
 const port = process.env.PORT || 5000; // Default to port 5000 if not provided
 
+// CORS Configuration
 const corsOptions = {
     origin: [
         'https://task-30-4rxz.vercel.app',  // Make sure this matches your actual frontend URL
@@ -122,10 +123,10 @@ app.post("/submit", async (req, res) => {
 
 // Global error handler (optional)
 app.use((err, req, res, next) => {
-    console.error("Error Stack:", err.stack);
+    console.error(err.stack);
     res.status(500).json({
         message: 'Something broke!',
-        error: process.env.NODE_ENV === 'development' ? err.stack : undefined,
+        error: process.env.NODE_ENV === 'development' ? err.message : undefined,
     });
 });
 
