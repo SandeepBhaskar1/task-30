@@ -69,7 +69,7 @@ app.get('/get', async (req, res) => {
 });
 
 // Route to handle form submission (POST request)
-app.post("submit", async (req, res) => {
+app.post("/submit", async (req, res) => {
     try {
         const { fullName, dateOfBirth, gender, phoneNo, emailId, fullAddress, emergencyContact } = req.body;
 
