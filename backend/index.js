@@ -8,13 +8,14 @@ const port = process.env.PORT || 5000; // Default to port 5000 if not provided
 
 const corsOptions = {
     origin: [
-        'https://task-30-4rxz.vercel.app/',    // Add your actual frontend URL
-        'http://localhost:5173',
+        'https://task-30-4rxz.vercel.app',  // Make sure this matches your actual frontend URL
+        'http://localhost:5173',  // For local development
     ],
     methods: ['GET', 'POST', 'OPTIONS'],
     allowedHeaders: ['Content-Type'],
     credentials: true,
 };
+
 
 
 // Apply CORS middleware
