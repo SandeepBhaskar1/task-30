@@ -6,14 +6,13 @@ require('dotenv').config(); // For environment variables
 const app = express();
 const port = process.env.PORT || 5000; // Default to port 5000 if not provided
 
-// CORS options configuration
 const corsOptions = {
-    origin: ['https://task-30-wjdc.vercel.app', 'http://localhost:5173'], // Allow frontend domains
+    origin: ['https://task-30-wjdc.vercel.app'], // Allow only the frontend origin
     methods: ['GET', 'POST', 'OPTIONS'], // Allowed HTTP methods
     allowedHeaders: ['Content-Type'], // Allowed headers
     credentials: true, // Allow credentials (cookies, authorization headers, etc.)
-    optionsSuccessStatus: 200, // For legacy browsers
 };
+
 
 // Apply CORS middleware
 app.use(cors(corsOptions));
