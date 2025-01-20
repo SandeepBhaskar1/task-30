@@ -18,6 +18,7 @@ function Form() {
             phoneNo: "",
         },
     });
+
     const [error, setError] = useState("");
     const [isSubmitting, setIsSubmitting] = useState(false);
     const navigate = useNavigate();
@@ -26,38 +27,34 @@ function Form() {
         const { name, value } = e.target;
         if (name.startsWith("emergencyContact.")) {
             const key = name.split(".")[1];
-            setFormData((prevData) => ({
-                ...prevData,
-                emergencyContact: { ...prevData.emergencyContact, [key]: value },
+            setFormData((prev) => ({
+                ...prev,
+                emergencyContact: { ...prev.emergencyContact, [key]: value },
             }));
         } else {
-            setFormData((prevData) => ({ ...prevData, [name]: value }));
+            setFormData((prev) => ({ ...prev, [name]: value }));
         }
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        setError(""); // Reset error state
-        setIsSubmitting(true); // Disable the submit button during submission
+        setError("");
+        setIsSubmitting(true);
 
         try {
             const response = await axios.post(
-                `${import.meta.env.VITE_BACKEND_URL}/submit`, // Ensure this points to the correct backend URL
+                `${import.meta.env.VITE_BACKEND_URL}/submit`,
                 formData,
-                {
-                    headers: { 
-                        "Content-Type": "application/json"
-                    },
-                    withCredentials: true
-                }
+                { headers: { "Content-Type": "application/json" } }
             );
-            navigate("/response", { state: response.data }); // Redirect to a response page after successful submission
+            navigate("/response", { state: response.data }); // Navigate to ResponsePage
         } catch (error) {
-            console.error("Error submitting form:", error);
-            // Show an error message based on the response from the backend
-            setError(error.response?.data?.message || "An error occurred while submitting the form.");
+            console.error(error);
+            setError(
+                error.response?.data?.message || "Failed to submit the form."
+            );
         } finally {
-            setIsSubmitting(false); // Enable the submit button after submission
+            setIsSubmitting(false);
         }
     };
 
@@ -66,144 +63,94 @@ function Form() {
             <div className="form-container">
                 <h1>University Application Form</h1>
                 {error && <div className="error-message">{error}</div>}
-                <form id="university-form" onSubmit={handleSubmit}>
-                    <div className="input-group">
-                        <div className="half-width">
-                            <label htmlFor="full-name">Full Name</label>
-                            <input 
-                                type="text" 
-                                id="full-name" 
-                                name="fullName" 
-                                value={formData.fullName} 
-                                onChange={handleChange}
-                                required 
-                                placeholder="Enter your full name" 
-                            />
-                        </div>
-                        <div className="half-width">
-                            <label htmlFor="dob">Date of Birth</label>
-                            <input 
-                                type="date" 
-                                id="dob" 
-                                name="dateOfBirth" 
-                                value={formData.dateOfBirth} 
-                                onChange={handleChange} 
-                                required 
-                            />
-                        </div>
-                    </div>
-
-                    <div className="input-group">
-                        <div className="half-width">
-                            <label htmlFor="gender">Gender</label>
-                            <select 
-                                id="gender" 
-                                name="gender" 
-                                value={formData.gender} 
-                                onChange={handleChange}
-                                required
-                            >
-                                <option value="">Select your gender</option>
-                                <option value="Male">Male</option>
-                                <option value="Female">Female</option>
-                                <option value="Other">Other</option>
-                            </select>
-                        </div>
-                        <div className="half-width">
-                            <label htmlFor="phone">Phone Number</label>
-                            <input 
-                                type="tel" 
-                                id="phone" 
-                                name="phoneNo" 
-                                value={formData.phoneNo} 
-                                onChange={handleChange}
-                                required 
-                                placeholder="Enter your phone number" 
-                            />
-                        </div>
-                    </div>
-
-                    <label htmlFor="email">Email ID</label>
-                    <input 
-                        type="email" 
-                        id="email" 
-                        name="emailId" 
-                        value={formData.emailId} 
+                <form onSubmit={handleSubmit}>
+                    {/* Form Fields */}
+                    <label>Full Name</label>
+                    <input
+                        type="text"
+                        name="fullName"
+                        value={formData.fullName}
                         onChange={handleChange}
-                        required 
-                        placeholder="Enter your email address" 
+                        required
                     />
-
-                    <label htmlFor="address">Full Address</label>
-                    <textarea 
-                        id="address" 
-                        name="fullAddress" 
-                        value={formData.fullAddress} 
+                    <label>Date of Birth</label>
+                    <input
+                        type="date"
+                        name="dateOfBirth"
+                        value={formData.dateOfBirth}
                         onChange={handleChange}
-                        required 
-                        placeholder="Enter your full address" 
+                        required
                     />
-
-                    <h2>Emergency Contact Details</h2>
-                    <div className="input-group">
-                        <div className="half-width">
-                            <label htmlFor="emergency-contact-name">Name</label>
-                            <input 
-                                type="text" 
-                                id="emergency-contact-name" 
-                                name="emergencyContact.name" 
-                                value={formData.emergencyContact.name} 
-                                onChange={handleChange}
-                                required 
-                                placeholder="Enter emergency contact name" 
-                            />
-                        </div>
-                        <div className="half-width">
-                            <label htmlFor="emergency-contact-relationship">Relationship</label>
-                            <input 
-                                type="text" 
-                                id="emergency-contact-relationship" 
-                                name="emergencyContact.relationship" 
-                                value={formData.emergencyContact.relationship} 
-                                onChange={handleChange}
-                                required 
-                                placeholder="Enter relationship" 
-                            />
-                        </div>
-                    </div>
-
-                    <div className="input-group">
-                        <div className="half-width">
-                            <label htmlFor="emergency-contact-email">Email</label>
-                            <input 
-                                type="email" 
-                                id="emergency-contact-email" 
-                                name="emergencyContact.emailId" 
-                                value={formData.emergencyContact.emailId} 
-                                onChange={handleChange}
-                                required 
-                                placeholder="Enter emergency contact email" 
-                            />
-                        </div>
-                        <div className="half-width">
-                            <label htmlFor="emergency-contact-phone">Phone Number</label>
-                            <input 
-                                type="tel" 
-                                id="emergency-contact-phone" 
-                                name="emergencyContact.phoneNo" 
-                                value={formData.emergencyContact.phoneNo} 
-                                onChange={handleChange}
-                                required 
-                                placeholder="Enter emergency contact phone" 
-                            />
-                        </div>
-                    </div>
-
-                    <button 
-                        type="submit" 
-                        disabled={isSubmitting}
+                    <label>Gender</label>
+                    <select
+                        name="gender"
+                        value={formData.gender}
+                        onChange={handleChange}
+                        required
                     >
-                        {isSubmitting ? 'Submitting...' : 'Submit Application'}
+                        <option value="">Select Gender</option>
+                        <option value="Male">Male</option>
+                        <option value="Female">Female</option>
+                        <option value="Other">Other</option>
+                    </select>
+                    <label>Phone Number</label>
+                    <input
+                        type="tel"
+                        name="phoneNo"
+                        value={formData.phoneNo}
+                        onChange={handleChange}
+                        required
+                    />
+                    <label>Email ID</label>
+                    <input
+                        type="email"
+                        name="emailId"
+                        value={formData.emailId}
+                        onChange={handleChange}
+                        required
+                    />
+                    <label>Full Address</label>
+                    <textarea
+                        name="fullAddress"
+                        value={formData.fullAddress}
+                        onChange={handleChange}
+                        required
+                    />
+                    <h2>Emergency Contact</h2>
+                    <label>Name</label>
+                    <input
+                        type="text"
+                        name="emergencyContact.name"
+                        value={formData.emergencyContact.name}
+                        onChange={handleChange}
+                        required
+                    />
+                    <label>Relationship</label>
+                    <input
+                        type="text"
+                        name="emergencyContact.relationship"
+                        value={formData.emergencyContact.relationship}
+                        onChange={handleChange}
+                        required
+                    />
+                    <label>Email ID</label>
+                    <input
+                        type="email"
+                        name="emergencyContact.emailId"
+                        value={formData.emergencyContact.emailId}
+                        onChange={handleChange}
+                        required
+                    />
+                    <label>Phone Number</label>
+                    <input
+                        type="tel"
+                        name="emergencyContact.phoneNo"
+                        value={formData.emergencyContact.phoneNo}
+                        onChange={handleChange}
+                        required
+                    />
+                    <button type="submit" disabled={isSubmitting}>
+                        {isSubmitting ? "Submitting..." : "Submit Application"}
                     </button>
                 </form>
             </div>

@@ -1,6 +1,6 @@
-import React from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
-import './App.css';
+import React from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+import "./App.css";
 
 function ResponsePage() {
     const location = useLocation();
@@ -11,21 +11,21 @@ function ResponsePage() {
         return (
             <div className="response-container error">
                 <h1>Error</h1>
-                <p>No form submission data found. Please submit the form first.</p>
-                <button onClick={() => navigate('/')}>Back to Form</button>
+                <p>No data found. Please submit the form first.</p>
+                <button onClick={() => navigate("/")}>Back to Form</button>
             </div>
         );
     }
 
     return (
         <div className="response-container">
-            <h1><span>Application</span> Response</h1>
+            <h1>Application Response</h1>
             <h2>{responseMessage.message}</h2>
             <div className="response-data">
                 {Object.entries(responseMessage.data).map(([key, value]) => (
                     <div key={key} className="data-item">
                         <strong>{key}:</strong>
-                        {typeof value === 'object' ? (
+                        {typeof value === "object" ? (
                             <div className="nested-data">
                                 {Object.entries(value).map(([nestedKey, nestedValue]) => (
                                     <div key={nestedKey}>
@@ -39,7 +39,7 @@ function ResponsePage() {
                     </div>
                 ))}
             </div>
-            <button onClick={() => navigate('/')}>Back to Form</button>
+            <button onClick={() => navigate("/")}>Back to Form</button>
         </div>
     );
 }
