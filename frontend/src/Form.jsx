@@ -37,12 +37,12 @@ function Form() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        setError("");
-        setIsSubmitting(true);
+        setError(""); // Reset error state
+        setIsSubmitting(true); // Disable the submit button during submission
 
         try {
             const response = await axios.post(
-                `${import.meta.env.VITE_BACKEND_URL}/submit`,
+                `${import.meta.env.VITE_BACKEND_URL}/submit`, // Ensure this points to the correct backend URL
                 formData,
                 {
                     headers: { 
@@ -51,12 +51,13 @@ function Form() {
                     withCredentials: true
                 }
             );
-            navigate("/response", { state: response.data });
+            navigate("/response", { state: response.data }); // Redirect to a response page after successful submission
         } catch (error) {
             console.error("Error submitting form:", error);
+            // Show an error message based on the response from the backend
             setError(error.response?.data?.message || "An error occurred while submitting the form.");
         } finally {
-            setIsSubmitting(false);
+            setIsSubmitting(false); // Enable the submit button after submission
         }
     };
 
