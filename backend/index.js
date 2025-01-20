@@ -7,10 +7,15 @@ const app = express();
 const port = process.env.PORT || 5000; // Default to port 5000 if not provided
 
 const corsOptions = {
-    origin: ['https://task-30-seven.vercel.app'], // Allow only the frontend origin
-    methods: ['GET', 'POST', 'OPTIONS'], // Allowed HTTP methods
-    allowedHeaders: ['Content-Type'], // Allowed headers
-    credentials: true, // Allow credentials (cookies, authorization headers, etc.)
+    origin: [
+        'https://task-30-wjdc.vercel.app',    // Add your actual frontend URL
+        'https://task-30-seven.vercel.app',
+        'http://localhost:3000',
+        'http://localhost:5173'
+    ],
+    methods: ['GET', 'POST', 'OPTIONS'],
+    allowedHeaders: ['Content-Type'],
+    credentials: true,
 };
 
 
